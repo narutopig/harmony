@@ -1,18 +1,22 @@
-# Gin with React Template
+# Harmony
 
-## Client (`client/`)
+A Discord clone made by two programmers who, frankly, don't really like the way that Discord operates
+
+## Code structure
+
+### Client - `client/`
 
 - The client uses React with Typescript to provide a simple, reactive UI
-- File layout (recommended)
+- File layout
   - `components/` - components that do not make up a full page
   - `pages/` - a component that makes up the full page (should be added under Routes in `App.tsx`)
 
-## Server (`server/`)
+### Server - `server/`
 
 - The server uses the Gin framework with Golang to create a fast backend
 
-## Troubleshooting
+## Self-hosting
 
-`server/main.go:6:2: no required module provides package github.com/gin-gonic/contrib/static: go.mod file not found in current directory or any parent directory; see 'go help modules'`
+## Links
 
-- Fix: Make sure that your current directory is `server/`; this error is caused by the lack of a go.mod file in the current directory
+- This project was created from my own [Gin + React template](https://github.com/narutopig/harmony)
