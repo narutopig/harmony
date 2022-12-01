@@ -11,15 +11,40 @@ import (
 var upgradeHandler = websocket.Upgrader{}
 //default upgrade settings
 
+//doing the funny to make a func for a simple error check
+
+func checkErr(err any) {
+	if (err != nil) {
+		log.Println("ERROR THROWN: ")
+		log.panic(err)
+		return
+	}
+}
+
 func connectHandler(w http.ResponseWriter, r *http.Request) { //value not reference 
 
 	connection, err = upgradeHandler.Upgrade(w, r, nil)
-	if (err != nil) {
-		log.Println("CONNECTION ISSUE")
-		log.panic(err)
+	checkErr(err)
 
+	log.Println("Connection Established")
+
+	connectReader(connection)
+
+
+}
+
+func connectReader(co *websocket.Conn) {
+	for {
+		type, content, err = co.ReadMessage()
+		checkErr(err)
+		
+		fmt.Println("Read message: " + content)
+
+		if er := co.WriteMessage(messageType, p); er != nil {
+			//retursne rror if comes across one, will execute writemssage func and will nly retirn error if there is one 
+			log.panic(er)
+		}
 	}
-
 }
 
 func main() {
