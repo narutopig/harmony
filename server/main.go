@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"time"
 )
 
 var upgradeHandler = websocket.Upgrader{}
@@ -29,10 +30,10 @@ func sendPacket(co *websocket.Conn) {
 
 	msgT, cont, err := co.ReadMessage()
 	//assuming that error is not existent
-
-	for true {
-		time.Sleep(time.second)
-		co.WriteMessage(msgT, content);
+	checkErr(err) //will break out with panic log if error
+	for {
+		time.Sleep(time.Second)
+		co.WriteMessage(msgT, cont);
 	}
 
 	
