@@ -57,9 +57,7 @@ func main() {
 	api := router.Group("/api")
 	{
 		api.GET("/", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "API is up!",
-			})
+			connectHandler(c.Writer, c.Request)//on req establish connection or just in general
 		})
 	}
 
