@@ -5,7 +5,22 @@ import (
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
+
+var upgradeHandler = websocket.Upgrader{}
+//default upgrade settings
+
+func connectHandler(w http.ResponseWriter, r *http.Request) { //value not reference 
+
+	connection, err = upgradeHandler.Upgrade(w, r, nil)
+	if (err != nil) {
+		log.Println("CONNECTION ISSUE")
+		log.panic(err)
+
+	}
+
+}
 
 func main() {
 	// Set the router as the default one shipped with Gin
@@ -24,5 +39,5 @@ func main() {
 
 	router.Run(":3000")
 
-	//rest api will impleemnt get and post alter
+	// api will impleemnt get and post alter
 }
