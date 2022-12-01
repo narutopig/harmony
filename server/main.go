@@ -23,4 +23,5 @@ func main() {
 	}
 
 	router.Run(":3000")
+	//this is the default gin rest api i will add the get and post fucns later
 }
