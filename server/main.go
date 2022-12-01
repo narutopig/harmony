@@ -25,6 +25,7 @@ func connectHandler(w http.ResponseWriter, r *http.Request) { //value not refere
 
 	connection, err = upgradeHandler.Upgrade(w, r, nil)
 	checkErr(err)
+	defer connection.Close()
 
 	log.Println("Connection Established")
 
