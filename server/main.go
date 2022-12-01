@@ -36,7 +36,7 @@ func connectHandler(w http.ResponseWriter, r *http.Request) { //value not refere
 
 func connectReader(co *websocket.Conn) {
 	for {
-		type, content, err = co.ReadMessage()
+		messageType, content, err = co.ReadMessage()
 		checkErr(err)
 		
 		fmt.Println("Read message: " + content)
