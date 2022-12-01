@@ -23,6 +23,22 @@ func checkErr(err error) {
 	}
 }
 
+func sendPacket(co *websocket.Conn) {
+	//even tho cotnent is techncially a byte array its lkay of io use any
+	//experimental forever loop
+
+	msgT, cont, err := co.ReadMessage()
+	//assuming that error is not existent
+
+	for true {
+		time.Sleep(time.second)
+		co.WriteMessage(msgT, content);
+	}
+
+	
+
+}
+
 func connectHandler(w http.ResponseWriter, r *http.Request) { //value not reference
 
 	connection, err := upgradeHandler.Upgrade(w, r, nil)
@@ -46,6 +62,8 @@ func connectReader(co *websocket.Conn) {
 			//retursne rror if comes across one, will execute writemssage func and will nly retirn error if there is one
 			log.Panic(err)
 		}
+
+		go sendPacket(co)
 	}
 }
 
