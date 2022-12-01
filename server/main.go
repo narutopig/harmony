@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+	"fmt"
+	"log"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
@@ -16,14 +18,14 @@ var upgradeHandler = websocket.Upgrader{}
 func checkErr(err any) {
 	if (err != nil) {
 		log.Println("ERROR THROWN: ")
-		log.panic(err)
+		log.Panic(err)
 		return
 	}
 }
 
 func connectHandler(w http.ResponseWriter, r *http.Request) { //value not reference 
 
-	connection, err = upgradeHandler.Upgrade(w, r, nil)
+	connection, err := upgradeHandler.Upgrade(w, r, nil)
 	checkErr(err)
 	defer connection.Close()
 
@@ -36,14 +38,14 @@ func connectHandler(w http.ResponseWriter, r *http.Request) { //value not refere
 
 func connectReader(co *websocket.Conn) {
 	for {
-		messageType, content, err = co.ReadMessage()
+		messageType, content, err := co.ReadMessage()
 		checkErr(err)
 		
 		fmt.Println("Read message: " + content)
 
-		if er := co.WriteMessage(messageType, p); er != nil {
+		if er := co.WriteMessage(messageType, content); er != nil {
 			//retursne rror if comes across one, will execute writemssage func and will nly retirn error if there is one 
-			log.panic(er)
+			log.Panic(er)
 		}
 	}
 }
