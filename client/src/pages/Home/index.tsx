@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import "./home.css";
 
 function Home() {
@@ -14,6 +16,23 @@ function Home() {
     "asdf",
     "asdf",
   ];
+
+
+  useEffect(() => {
+    const ws = new WebSocket("wss://ws.bitstamp.net");
+
+    ws.onopen = () => {
+        console.log("connection")
+    }
+
+    ws.onmessage = (message) => {
+        console.log(message)
+    }
+
+    return () => {
+        ws.close(0, "User disconnected")
+    }
+  })
 
   return (
     <div className="container">
