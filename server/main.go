@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"fmt"
 	"log"
@@ -11,19 +13,20 @@ import (
 )
 
 var upgradeHandler = websocket.Upgrader{}
+
 //default upgrade settings
 
 //doing the funny to make a func for a simple error check
 
-func checkErr(err any) {
-	if (err != nil) {
+func checkErr(err error) {
+	if err != nil {
 		log.Println("ERROR THROWN: ")
 		log.Panic(err)
 		return
 	}
 }
 
-func connectHandler(w http.ResponseWriter, r *http.Request) { //value not reference 
+func connectHandler(w http.ResponseWriter, r *http.Request) { //value not reference
 
 	connection, err := upgradeHandler.Upgrade(w, r, nil)
 	checkErr(err)
@@ -33,19 +36,18 @@ func connectHandler(w http.ResponseWriter, r *http.Request) { //value not refere
 
 	connectReader(connection)
 
-
 }
 
 func connectReader(co *websocket.Conn) {
 	for {
 		messageType, content, err := co.ReadMessage()
 		checkErr(err)
-		
-		fmt.Println("Read message: " + content)
 
-		if er := co.WriteMessage(messageType, content); er != nil {
-			//retursne rror if comes across one, will execute writemssage func and will nly retirn error if there is one 
-			log.Panic(er)
+		fmt.Println("Read message: " + string(content))
+
+		if err := co.WriteMessage(messageType, content); err != nil {
+			//retursne rror if comes across one, will execute writemssage func and will nly retirn error if there is one
+			log.Panic(err)
 		}
 	}
 }
@@ -59,7 +61,7 @@ func main() {
 	api := router.Group("/api")
 	{
 		api.GET("/", func(c *gin.Context) {
-			connectHandler(c.Writer, c.Request)//on req establish connection or just in general
+			connectHandler(c.Writer, c.Request) //on req establish connection or just in general
 		})
 	}
 
