@@ -1,17 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
-var upgradeHandler = websocket.Upgrader{}
+var upgradeHandler = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return r.Method == "GET" && r.URL.Path == "/api/ws"
+	},
+}
 
 // default upgrade settings
 
@@ -24,17 +26,14 @@ func checkErr(err error) {
 	}
 }
 
-func sendPacket(co *websocket.Conn) {
+func sendPacket(co *websocket.Conn, content []byte) {
 	// even tho cotnent is techncially a byte array its lkay of io use any
 	// experimental forever loop
 
-	msgT, cont, err := co.ReadMessage()
+	msgT, _, err := co.ReadMessage()
 	// assuming that error is not existent
 	checkErr(err) // will break out with panic log if error
-	for {
-		time.Sleep(time.Second)
-		co.WriteMessage(msgT, cont)
-	}
+	co.WriteMessage(msgT, content)
 }
 
 func connectHandler(w http.ResponseWriter, r *http.Request) { // value not reference
@@ -53,14 +52,14 @@ func connectReader(co *websocket.Conn) {
 		messageType, content, err := co.ReadMessage()
 		checkErr(err)
 
-		fmt.Println("Read message: " + string(content))
+		log.Printf("Read message: %s\n", content)
 
 		if err := co.WriteMessage(messageType, content); err != nil {
 			// retursne rror if comes across one, will execute writemssage func and will nly retirn error if there is one
 			log.Panic(err)
 		}
 
-		go sendPacket(co)
+		go sendPacket(co, []byte("connected"))
 	}
 }
 
